@@ -116,21 +116,6 @@ for i in range(len(repo_urls)):
             logging.info("Made changes!")
             repo.git.add("*")
             repo.git.commit(m=TITLE)
-
-            repoName = repo_url.removeprefix("https://github.com/")
-            gRepo = g.get_repo(repoName)
-            forkedRepo = gRepo.create_fork()
-
-            remote = repo.create_remote("fork", "https://%s:%s@" % (USERNAME, PASSWORD) + forkedRepo.clone_url.removeprefix("https://"))
-            repo.git.push("fork", BRANCH_NAME, "-f")
-
-            gRepo.create_pull(
-                title=TITLE,
-                body=DESCRIPTION,
-                base=gRepo.default_branch,
-                head="%s:%s" % (USERNAME, BRANCH_NAME),
-                draft=False
-            )
         else:
             logging.info("No changes to be made")
     except Exception as e:
